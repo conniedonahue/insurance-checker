@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { EligibilityInquiryRequest } from './eligibility-request.interface';
+import { GetEligibilityDTO } from './eligibility.get-eligibility.dto';
 
 @Injectable()
 export class EligibilityService {
-  check(
-    authorization: string,
-    clientApiId: string,
-    data: EligibilityInquiryRequest,
-  ) {
+  check(authorization: string, clientApiId: string, data: GetEligibilityDTO) {
     const eligibilityInquiryRequest = {
       payerCode: '00007',
       provider: {

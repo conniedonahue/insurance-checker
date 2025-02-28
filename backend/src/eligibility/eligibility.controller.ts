@@ -1,5 +1,6 @@
 import { Controller, Post, Body, Headers } from '@nestjs/common';
 import { EligibilityService } from './eligibility.service';
+import { GetEligibilityDTO } from './eligibility.get-eligibility.dto';
 
 @Controller('eligibility')
 export class EligibilityController {
@@ -7,7 +8,7 @@ export class EligibilityController {
 
   @Post()
   checkEligibility(
-    @Body() data: any,
+    @Body() data: GetEligibilityDTO,
     @Headers('authorization') authorization: string,
     @Headers('client-api-id') clientApiId: string,
   ) {
