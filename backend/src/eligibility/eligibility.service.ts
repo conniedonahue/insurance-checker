@@ -1,65 +1,52 @@
 import { Injectable } from '@nestjs/common';
 import { GetEligibilityDTO } from './eligibility.get-eligibility.dto';
+import { EligibilityRequest } from './eligibility-request.interface';
 
 @Injectable()
 export class EligibilityService {
   check(authorization: string, clientApiId: string, data: GetEligibilityDTO) {
-    const eligibilityInquiryRequest = {
-      payerCode: '00007',
-      provider: {
-        firstName: data.provider?.firstName || '',
-        middleName: data.provider?.middleName || '',
-        lastName: data.provider?.lastName || 'test name',
-        npi: data.provider?.npi || '1122334455',
-        pin: data.provider?.pin || '00000',
-      },
-      subscriber: {
-        firstName: data.subscriber?.firstName || 'first',
-        middleName: data.subscriber?.middleName || '',
-        lastName: data.subscriber?.lastName || 'somelast',
-        dob: data.subscriber?.dob || '12/21/2018',
-        memberId: data.subscriber?.memberId || '1234567890',
-      },
-      dependent: {
-        patient: {
-          firstName: data.dependent?.patient?.firstName || '',
-          middleName: data.dependent?.patient?.middleName || '',
-          lastName: data.dependent?.patient?.lastName || '',
-          dob: data.dependent?.patient?.dob || '',
-          gender: data.dependent?.patient?.gender || '',
-        },
-        relationWithSubscriber: data.dependent?.relationWithSubscriber || '',
-      },
-      isSubscriberPatient: data.isSubscriberPatient || 'true',
-      doS_StartDate: data.doS_StartDate || '12/21/2018',
-      doS_EndDate: data.doS_EndDate || '12/21/2018',
-      serviceCodes: data.serviceCodes || ['30'], // Default to service code "30"
-      isHMOPlan: data.isHMOPlan || true,
-      includeTextResponse: data.includeTextResponse || true,
-      referenceId: data.referenceId || '1234',
-      location: data.location || 'Nowhere',
-      internalId: data.internalId || '',
-      customerId: data.customerId || '',
-    };
+    const eligibilityRequest = this.mapDataToEligibilityRequest(data);
 
-    // Mock response:
-    // Checks to see if user is a Gemini, if so: DENIED
-    const isEligible = isAGemini(data.subscriber?.dob ?? ''); // Example check
+    // MOCK RESPONSE: Checks to see if user is a Gemini, if so: DENIED
+    const isEligible = this.isAGemini(data.subscriber?.dob ?? '');
+
     return {
       eligible: isEligible,
       message: isEligible ? 'Approved' : 'Not eligible',
-      details: eligibilityInquiryRequest,
+      details: eligibilityRequest,
     };
   }
-}
 
-function isAGemini(dob: string): boolean {
-  if (!dob) {
+  private mapDataToEligibilityRequest(
+    data: GetEligibilityDTO,
+  ): EligibilityRequest {
+    return {
+      payerCode: data.payerCode,
+      payerName: data.payerName,
+      provider: data.provider,
+      subscriber: data.subscriber,
+      dependent: data.dependent,
+      isSubscriberPatient: data.isSubscriberPatient,
+      doS_StartDate: data.doS_StartDate,
+      doS_EndDate: data.doS_EndDate,
+      serviceCodes: data.serviceCodes,
+      isHMOPlan: data.isHMOPlan ?? true,
+      includeTextResponse: data.includeTextResponse ?? true,
+      referenceId: data.referenceId,
+      location: data.location,
+      internalId: data.internalId || '',
+      customerId: data.customerId || '',
+    };
+  }
+
+  private isAGemini(dob: string): boolean {
+    if (!dob) {
+      return false;
+    }
+    const [month, day, ,] = dob.split('/').map((str) => Number(str));
+    if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) {
+      return true;
+    }
     return false;
   }
-  const [month, day, ,] = dob.split('/').map((str) => Number(str));
-  if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) {
-    return true;
-  }
-  return false;
 }

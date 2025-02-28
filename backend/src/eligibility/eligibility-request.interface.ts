@@ -1,4 +1,4 @@
-export interface EligibilityInquiryRequest {
+export interface EligibilityRequest {
   payerCode: string;
   payerName?: string;
   provider: {
