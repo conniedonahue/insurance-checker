@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { GetEligibilityRequest, GetEligibilityResponse } from "./types/GetEligibility";
+import {
+  GetEligibilityRequest,
+  GetEligibilityResponse,
+} from "./types/GetEligibility";
+import { createGetEligibilityRequest } from "./lib/createGetEligibilityRequest";
 
 export default function Home() {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     dob: "",
     healthPlan: "",
   });
@@ -27,10 +32,12 @@ export default function Home() {
     setEligibilityResult(null);
 
     try {
+      const eligibilityRequest: GetEligibilityRequest =
+        createGetEligibilityRequest(formData);
       const res = await fetch("http://localhost:3001/eligibility-check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(eligibilityRequest),
       });
       const data = await res.json();
       setEligibilityResult(data);
@@ -54,11 +61,22 @@ export default function Home() {
         className="bg-white p-6 rounded shadow-md w-full max-w-md"
       >
         <div className="mb-4">
-          <label className="block text-sm font-medium">Full Name</label>
+          <label className="block text-sm font-medium">First Name</label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            required
+            className="w-full p-2 border rounded mt-1"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium">Last Name</label>
+          <input 
+            type="text"
+            name="lastName"
             onChange={handleChange}
             required
             className="w-full p-2 border rounded mt-1"
