@@ -1,14 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GetEligibilityDTO } from './eligibility.get-eligibility.dto';
 import { EligibilityRequest } from './eligibility-request.interface';
 
 @Injectable()
 export class EligibilityService {
+  private readonly logger = new Logger(EligibilityService.name);
+
   check(authorization: string, clientApiId: string, data: GetEligibilityDTO) {
+    this.logger.log(
+      `Performing check() on SUBSCRIBER.LASTNAME: ${data.subscriber.lastName}`,
+    );
     const eligibilityRequest = this.mapDataToEligibilityRequest(data);
 
     // MOCK RESPONSE: Checks to see if user is a Gemini, if so: DENIED
-    const isEligible = this.isAGemini(data.subscriber?.dob ?? '');
+    const isEligible = !this.isAGemini(data.subscriber?.dob ?? '');
 
     return {
       eligible: isEligible,
@@ -41,6 +46,7 @@ export class EligibilityService {
 
   private isAGemini(dob: string): boolean {
     if (!dob) {
+      this.logger.warn('Missing DOB in Request');
       return false;
     }
     const [month, day, ,] = dob.split('/').map((str) => Number(str));

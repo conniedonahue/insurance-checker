@@ -12,6 +12,7 @@ export class EligibilityController {
     @Headers('authorization') authorization: string,
     @Headers('client-api-id') clientApiId: string,
   ) {
+    console.log('in controller');
     return this.eligibilityService.check(authorization, clientApiId, data);
   }
 }
