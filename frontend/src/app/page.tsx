@@ -34,7 +34,7 @@ export default function Home() {
     try {
       const eligibilityRequest: GetEligibilityRequest =
         createGetEligibilityRequest(formData);
-      const res = await fetch("http://localhost:3001/eligibility-check", {
+      const res = await fetch("http://localhost:3000/eligibility", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(eligibilityRequest),
@@ -74,7 +74,7 @@ export default function Home() {
 
         <div className="mb-4">
           <label className="block text-sm font-medium">Last Name</label>
-          <input 
+          <input
             type="text"
             name="lastName"
             onChange={handleChange}
