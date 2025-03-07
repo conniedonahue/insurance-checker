@@ -7,6 +7,9 @@ import {
 } from "./types/GetEligibility";
 import { createGetEligibilityRequest } from "./lib/createGetEligibilityRequest";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+
 export default function Home() {
   const [formData, setFormData] = useState({
     firstName: "",
@@ -34,7 +37,7 @@ export default function Home() {
     try {
       const eligibilityRequest: GetEligibilityRequest =
         createGetEligibilityRequest(formData);
-      const res = await fetch("http://localhost:3000/eligibility", {
+      const res = await fetch(`${API_URL}/eligibility`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(eligibilityRequest),
