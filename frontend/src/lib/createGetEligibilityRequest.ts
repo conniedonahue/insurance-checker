@@ -1,4 +1,4 @@
-import { GetEligibilityRequest } from "@/types/GetEligibility";
+import { GetEligibilityRequest } from "../../types/GetEligibility";
 
 export function createGetEligibilityRequest(formData: {
   firstName: string;

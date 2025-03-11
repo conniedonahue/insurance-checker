@@ -4,11 +4,10 @@ import React, { useState } from "react";
 import {
   GetEligibilityRequest,
   GetEligibilityResponse,
-} from "@/types/GetEligibility";
+} from "../../types/GetEligibility";
 import { createGetEligibilityRequest } from "@/lib/createGetEligibilityRequest";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 
 export default function CheckAvailability() {
   const [formData, setFormData] = useState({
